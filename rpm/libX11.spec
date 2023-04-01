@@ -5,6 +5,7 @@ Summary:    Core X11 protocol client library
 License:    MIT
 URL:        https://gitlab.freedesktop.org/xorg/lib/libx11
 Source0:    https://gitlab.freedesktop.org/xorg/lib/libx11/-/archive/%{name}-%{version}/libx11-%{name}-%{version}.tar.bz2
+Requires:   %{name}-data = %{version}-%{release}
 BuildRequires:  autoconf
 BuildRequires:  automake
 BuildRequires:  libtool
@@ -23,12 +24,30 @@ user input to and accepts output requests from various client programs
 located either on the same machine or elsewhere in the network. Xlib
 is a C subroutine library that application programs (clients) use to
 interface with the window system by means of a stream connection.
-Although a client usually runs on the same machine as the X server it
-is talking to, this need not be the case.
+
+%package data
+Summary:    Shared data for %{name} and %{name}-xcb.
+
+%description data
+The %{name}-data package contains files shared between %{name} and %{name}-xcb.
+
+%package xcb
+Summary:    X Library XCB interface
+Requires:   %{name}-data = %{version}-%{release}
+
+%description xcb
+The X Window System is a network-transparent window system that was
+designed at MIT. X display servers run on computers with either
+monochrome or color bitmap display hardware. The server distributes
+user input to and accepts output requests from various client programs
+located either on the same machine or elsewhere in the network. Xlib
+is a C subroutine library that application programs (clients) use to
+interface with the window system by means of a stream connection.
 
 %package devel
 Summary:    Development files for %{name}
 Requires:   %{name} = %{version}-%{release}
+Requires:   %{name}-xcb = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and header files for developing
@@ -36,7 +55,6 @@ applications that use %{name}.
 
 %package doc
 Summary:    Documentation for %{name}
-Requires:   %{name} = %{version}-%{release}
 
 %description doc
 %{summary}.
@@ -58,8 +76,15 @@ autoreconf -fi
 %files
 %license COPYING
 %{_libdir}/%{name}.so.*
-%{_libdir}/%{name}-xcb.so.*
 %{_datadir}/X11
+
+%files data
+%license COPYING
+%{_datadir}/X11
+
+%files xcb
+%license COPYING
+%{_libdir}/%{name}-xcb.so.*
 
 %files devel
 %license COPYING
